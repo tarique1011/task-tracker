@@ -1,10 +1,16 @@
 import { StackNavigationProp } from '@react-navigation/stack'
 import React from 'react'
 import { Welcome } from '../../components'
-import { HomeStackParamList } from '../../types'
+import { HomeStackParamList, TaskType } from '../../types'
+import { connect } from 'react-redux'
+import { AppState } from '../../reducers'
 
 interface WelcomeScreenProps {
   navigation: StackNavigationProp<HomeStackParamList, 'Welcome'>
+}
+
+interface LinkStateProps {
+  taskList: Array<TaskType>
 }
 
 interface WelcomeScreenState {
@@ -13,8 +19,10 @@ interface WelcomeScreenState {
   errorMessage: string
 }
 
-class WelcomeScreen extends React.Component<WelcomeScreenProps, WelcomeScreenState> {
-  constructor (props: WelcomeScreenProps) {
+type Props = WelcomeScreenProps & LinkStateProps
+
+class WelcomeScreen extends React.Component<Props, WelcomeScreenState> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       taskName: '',
@@ -32,8 +40,13 @@ class WelcomeScreen extends React.Component<WelcomeScreenProps, WelcomeScreenSta
 
   createTask = () => {
     const { taskName } = this.state
+    const { taskList } = this.props
+    this.setState({ error: false, errorMessage: '' })
     if (taskName) {
-      this.props.navigation.navigate('CreateTask', { taskName })
+      const filter = taskList.filter(item => item.taskName === taskName)
+      filter.length === 0
+        ? this.props.navigation.navigate('CreateTask', { taskName })
+        : this.setState({ error: true, errorMessage: 'Task name already exists.' })
     } else {
       this.setState({ error: true, errorMessage: 'This field is required.' })
     }
@@ -54,4 +67,12 @@ class WelcomeScreen extends React.Component<WelcomeScreenProps, WelcomeScreenSta
   }
 }
 
-export { WelcomeScreen }
+const mapStateToProps = (state: AppState) => {
+  return {
+    taskList: state.task.taskList
+  }
+}
+
+const WelcomeScreenWithRedux = connect(mapStateToProps, null)(WelcomeScreen)
+
+export { WelcomeScreenWithRedux }

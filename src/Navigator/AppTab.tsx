@@ -1,8 +1,8 @@
 import React from 'react'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import { HistoryScreen } from '../screens'
 import { Colors } from '../styles'
 import { HomeStackNavigator } from './HomeStack'
+import { HistoryStackNavigator } from './HistoryStack'
 
 const Tab = createMaterialBottomTabNavigator()
 
@@ -15,7 +15,7 @@ const AppTab = () => {
       barStyle={{ backgroundColor: Colors.white }}
     >
       <Tab.Screen name='Home' component={HomeStackNavigator} options={{ tabBarIcon: 'home' }} />
-      <Tab.Screen name='History' component={HistoryScreen} options={{ tabBarIcon: 'history' }} />
+      <Tab.Screen name='History' component={HistoryStackNavigator} options={{ tabBarIcon: 'history' }} />
     </Tab.Navigator>
   )
 }

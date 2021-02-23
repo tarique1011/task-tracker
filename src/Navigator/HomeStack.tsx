@@ -1,6 +1,6 @@
 import React from 'react'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
-import { WelcomeScreen, CreateTaskScreen } from '../screens'
+import { WelcomeScreenWithRedux, CreateTaskScreenWithRedux } from '../screens'
 import { HomeStackParamList } from '../types'
 
 const HomeStack = createStackNavigator<HomeStackParamList>()
@@ -13,12 +13,12 @@ const HomeStackNavigator: React.FunctionComponent = () => {
     >
       <HomeStack.Screen
         name='Welcome'
-        component={WelcomeScreen}
+        component={WelcomeScreenWithRedux}
         options={{ headerTitle: 'Hi Tarique!' }}
       />
       <HomeStack.Screen
         name='CreateTask'
-        component={CreateTaskScreen}
+        component={CreateTaskScreenWithRedux}
         options={({ route }) => ({
           headerTitle: route.params.taskName
         })}

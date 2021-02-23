@@ -3,11 +3,23 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { RouteProp } from '@react-navigation/native'
 import { CreateTask } from '../../components'
 import { formatDate, formatTime } from '../../utils'
-import { HomeStackParamList } from '../../types'
+import { HomeStackParamList, TaskActionTypes, TaskType } from '../../types'
+import { connect } from 'react-redux'
+import { AppState } from '../../reducers'
+import { setTaskList } from '../../actions'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface CreateTaskScreenProps {
   navigation: StackNavigationProp<HomeStackParamList, 'CreateTask'>,
   route: RouteProp<HomeStackParamList, 'CreateTask'>
+}
+
+interface LinkStateProps {
+  taskList: Array<TaskType>
+}
+
+interface DispatchProps {
+  setTaskList: (taskList: Array<TaskType>) => TaskActionTypes
 }
 
 interface CreateTaskScreenState {
@@ -26,8 +38,10 @@ interface CreateTaskScreenState {
   saved: boolean
 }
 
-class CreateTaskScreen extends React.Component<CreateTaskScreenProps, CreateTaskScreenState> {
-  constructor (props: CreateTaskScreenProps) {
+type Props = CreateTaskScreenProps & LinkStateProps & DispatchProps
+
+class CreateTaskScreen extends React.Component<Props, CreateTaskScreenState> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       timer: null,
@@ -44,6 +58,14 @@ class CreateTaskScreen extends React.Component<CreateTaskScreenProps, CreateTask
       endDate: null,
       saved: false
     }
+  }
+
+  componentDidMount () {
+    this.setTaskListFromAsync()
+  }
+
+  setTaskListFromAsync = () => {
+
   }
 
   componentWillUnmount () {
@@ -97,9 +119,28 @@ class CreateTaskScreen extends React.Component<CreateTaskScreenProps, CreateTask
 
   handleOnSave = () => {
     this.setState({ saved: true })
+    this.saveTaskItem()
     setTimeout(() => {
       this.props.navigation.goBack()
     }, 1500)
+  }
+
+  saveTaskItem = () => {
+    const { taskName } = this.props.route.params
+    const { duration, startTime, endTime, startDate, endDate } = this.state
+    const { taskList } = this.props
+    const taskItem = {
+      taskName,
+      duration,
+      startTime,
+      endTime,
+      startDate,
+      endDate
+    }
+    const newTaskList = [...taskList]
+    newTaskList.push(taskItem)
+    this.props.setTaskList(newTaskList)
+    AsyncStorage.setItem('taskList', JSON.stringify(newTaskList))
   }
 
   render () {
@@ -143,4 +184,12 @@ class CreateTaskScreen extends React.Component<CreateTaskScreenProps, CreateTask
   }
 }
 
-export { CreateTaskScreen }
+const mapStateToProps = (state: AppState) => {
+  return {
+    taskList: state.task.taskList
+  }
+}
+
+const CreateTaskScreenWithRedux = connect(mapStateToProps, { setTaskList })(CreateTaskScreen)
+
+export { CreateTaskScreenWithRedux }
