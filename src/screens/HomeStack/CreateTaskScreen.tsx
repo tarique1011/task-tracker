@@ -60,14 +60,6 @@ class CreateTaskScreen extends React.Component<Props, CreateTaskScreenState> {
     }
   }
 
-  componentDidMount () {
-    this.setTaskListFromAsync()
-  }
-
-  setTaskListFromAsync = () => {
-
-  }
-
   componentWillUnmount () {
     const { timer } = this.state
     if (timer) {

@@ -50,6 +50,9 @@ class SingleTaskScreen extends React.Component<Props, SingleTaskScreenState> {
   }
 
   handleOnChangeText = (taskName: string) => {
+    if (this.state.taskName) {
+      this.setState({ error: false, errorMessage: '' })
+    }
     this.setState({ taskName })
   }
 
@@ -57,6 +60,11 @@ class SingleTaskScreen extends React.Component<Props, SingleTaskScreenState> {
     const { taskName } = this.state
     const { taskList } = this.props
     if (taskName) {
+      const filter = taskList.filter(item => item.taskName === taskName)
+      if (filter.length !== 0 && taskName !== this.props.route.params.task.taskName) {
+        this.setState({ error: true, errorMessage: 'Task name already exists.' })
+        return
+      }
       if (taskName !== this.props.route.params.task.taskName) {
         const newTaskList = taskList.map((item: TaskType) => {
           if (this.props.route.params.task.taskName === item.taskName) {
@@ -71,7 +79,7 @@ class SingleTaskScreen extends React.Component<Props, SingleTaskScreenState> {
       }
       this.setState({ editable: false })
     } else {
-      this.setState({ errorMessage: 'Please enter a valid name.' })
+      this.setState({ error: true, errorMessage: 'Please enter a valid name.' })
     }
   }
 

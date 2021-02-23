@@ -4,6 +4,9 @@ import { Welcome } from '../../components'
 import { HomeStackParamList, TaskType } from '../../types'
 import { connect } from 'react-redux'
 import { AppState } from '../../reducers'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { setTaskList } from '../../actions'
+import reactotron from 'reactotron-react-native'
 
 interface WelcomeScreenProps {
   navigation: StackNavigationProp<HomeStackParamList, 'Welcome'>
@@ -13,13 +16,17 @@ interface LinkStateProps {
   taskList: Array<TaskType>
 }
 
+interface DispatchProps {
+  setTaskList: (taskList: Array<TaskType>) => void
+}
+
 interface WelcomeScreenState {
   taskName: string,
   error: boolean,
   errorMessage: string
 }
 
-type Props = WelcomeScreenProps & LinkStateProps
+type Props = WelcomeScreenProps & LinkStateProps & DispatchProps
 
 class WelcomeScreen extends React.Component<Props, WelcomeScreenState> {
   constructor (props: Props) {
@@ -28,6 +35,21 @@ class WelcomeScreen extends React.Component<Props, WelcomeScreenState> {
       taskName: '',
       error: false,
       errorMessage: ''
+    }
+  }
+
+  componentDidMount () {
+    this.setTaskListFromAsync()
+  }
+
+  setTaskListFromAsync = async () => {
+    try {
+      const taskList = await AsyncStorage.getItem('taskList')
+      if (taskList) {
+        const parsedTaskList = JSON.parse(taskList)
+        this.props.setTaskList(parsedTaskList)
+      }
+    } catch {
     }
   }
 
@@ -45,11 +67,16 @@ class WelcomeScreen extends React.Component<Props, WelcomeScreenState> {
     if (taskName) {
       const filter = taskList.filter(item => item.taskName === taskName)
       filter.length === 0
-        ? this.props.navigation.navigate('CreateTask', { taskName })
+        ? this.navigateToCreateTask(taskName)
         : this.setState({ error: true, errorMessage: 'Task name already exists.' })
     } else {
       this.setState({ error: true, errorMessage: 'This field is required.' })
     }
+  }
+
+  navigateToCreateTask = (taskName: string) => {
+    this.props.navigation.navigate('CreateTask', { taskName })
+    this.setState({ taskName: '' })
   }
 
   render () {
@@ -73,6 +100,6 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const WelcomeScreenWithRedux = connect(mapStateToProps, null)(WelcomeScreen)
+const WelcomeScreenWithRedux = connect(mapStateToProps, { setTaskList })(WelcomeScreen)
 
 export { WelcomeScreenWithRedux }

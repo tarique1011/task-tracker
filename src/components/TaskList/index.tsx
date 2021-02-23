@@ -1,17 +1,23 @@
 import React from 'react'
-import { View, FlatList } from 'react-native'
-import { TaskCard, LineSeparator, EmptyTaskList } from '../../components'
+import { View, FlatList, StyleSheet } from 'react-native'
+import { TaskCard, LineSeparator, EmptyTaskList, SearchBar } from '../../components'
 import { TaskType } from '../../types'
 
 interface TaskListProps {
   taskList: Array<TaskType>,
+  searchText: string,
+  onSearch: (text: string) => void,
   openSingleTask: (task: TaskType) => void
 }
 
-const TaskList: React.FunctionComponent<TaskListProps> = ({ taskList, openSingleTask }) => {
+const TaskList: React.FunctionComponent<TaskListProps> = ({ taskList, openSingleTask, searchText, onSearch }) => {
   const data = [...taskList].reverse()
   return (
-    <View>
+    <View style={styles.mainContainer}>
+      <SearchBar
+        searchText={searchText}
+        onChangeText={onSearch}
+      />
       <FlatList
         data={data}
         keyExtractor={(item) => item.taskName}
@@ -22,5 +28,11 @@ const TaskList: React.FunctionComponent<TaskListProps> = ({ taskList, openSingle
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1
+  }
+})
 
 export { TaskList }
