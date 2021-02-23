@@ -5,7 +5,8 @@ const Colors = {
   white: '#ffffff',
   red: '#DE4A39',
   green: '#26AC75',
-  lightGray: '#3c3c3c'
+  lightGray: '#3c3c3c',
+  yellow: '#e9c46a'
 }
 
 export { Colors }

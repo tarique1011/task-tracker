@@ -38,12 +38,13 @@ const Input: React.FunctionComponent<InputProps> = (props) => {
 const styles = StyleSheet.create({
   input: {
     width: '100%',
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 10,
     borderWidth: 1,
     borderRadius: 5,
     borderColor: Colors.gray,
-    color: Colors.black
+    color: Colors.black,
+    backgroundColor: Colors.white
   },
   error: {
     fontSize: 12,

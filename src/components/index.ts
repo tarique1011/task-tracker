@@ -5,6 +5,7 @@ export * from './Button'
 export * from './LineSeparator'
 export * from './SingleTask'
 export * from './SearchBar'
+export * from './Signup'
 
 export * from './TaskList'
 export * from './TaskList/TaskCard'

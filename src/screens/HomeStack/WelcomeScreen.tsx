@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import { AppState } from '../../reducers'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { setTaskList } from '../../actions'
-import reactotron from 'reactotron-react-native'
 
 interface WelcomeScreenProps {
   navigation: StackNavigationProp<HomeStackParamList, 'Welcome'>

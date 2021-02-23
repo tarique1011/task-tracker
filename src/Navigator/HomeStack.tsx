@@ -1,11 +1,12 @@
 import React from 'react'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import { WelcomeScreenWithRedux, CreateTaskScreenWithRedux } from '../screens'
-import { HomeStackParamList } from '../types'
+import { AppTabParamList, HomeStackParamList } from '../types'
+import { RouteProp } from '@react-navigation/native'
 
 const HomeStack = createStackNavigator<HomeStackParamList>()
 
-const HomeStackNavigator: React.FunctionComponent = () => {
+const HomeStackNavigator = ({ route }: { route: RouteProp<AppTabParamList, 'Home'>}) => {
   return (
     <HomeStack.Navigator
       headerMode='screen'
@@ -14,7 +15,8 @@ const HomeStackNavigator: React.FunctionComponent = () => {
       <HomeStack.Screen
         name='Welcome'
         component={WelcomeScreenWithRedux}
-        options={{ headerTitle: 'Hi Tarique!' }}
+        options={({ route }) => ({ headerTitle: `Hi ${route.params.name}!` })}
+        initialParams={{ name: route.params.name }}
       />
       <HomeStack.Screen
         name='CreateTask'
