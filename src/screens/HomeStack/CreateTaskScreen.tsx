@@ -114,7 +114,7 @@ class CreateTaskScreen extends React.Component<Props, CreateTaskScreenState> {
     this.saveTaskItem()
     setTimeout(() => {
       this.props.navigation.goBack()
-    }, 1500)
+    }, 1000)
   }
 
   saveTaskItem = () => {

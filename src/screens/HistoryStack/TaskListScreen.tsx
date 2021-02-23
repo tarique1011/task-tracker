@@ -5,6 +5,7 @@ import { TaskList } from '../../components'
 import { AppState } from '../../reducers'
 import { HistoryStackParamList, TaskType } from '../../types'
 import { setTaskList } from '../../actions'
+import reactotron from 'reactotron-react-native'
 
 interface TaskListScreenProps {
   navigation: StackNavigationProp<HistoryStackParamList, 'TaskList'>
@@ -34,16 +35,19 @@ class TaskListScreen extends React.Component<Props, TaskListScreenState> {
   }
 
   componentDidMount () {
-    this.props.navigation.addListener('focus', () => this.setList())
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      this.setList()
+    })
   }
 
   componentWillUnmount () {
-    this.props.navigation.removeListener('focus', () => this.setList())
+    this.focusListener()
   }
 
   setList = () => {
     const { taskList } = this.props
-    this.searchableList = taskList
+    this.searchableList = [...taskList]
+    reactotron.log(this.searchableList)
   }
 
   openSingleTask = (task: TaskType) => {
