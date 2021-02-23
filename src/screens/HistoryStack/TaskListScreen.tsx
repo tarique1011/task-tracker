@@ -5,7 +5,6 @@ import { TaskList } from '../../components'
 import { AppState } from '../../reducers'
 import { HistoryStackParamList, TaskType } from '../../types'
 import { setTaskList } from '../../actions'
-import reactotron from 'reactotron-react-native'
 
 interface TaskListScreenProps {
   navigation: StackNavigationProp<HistoryStackParamList, 'TaskList'>
@@ -26,6 +25,7 @@ interface TaskListScreenState {
 }
 class TaskListScreen extends React.Component<Props, TaskListScreenState> {
   searchableList: Array<TaskType>
+  focusListener: any
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -47,7 +47,6 @@ class TaskListScreen extends React.Component<Props, TaskListScreenState> {
   setList = () => {
     const { taskList } = this.props
     this.searchableList = [...taskList]
-    reactotron.log(this.searchableList)
   }
 
   openSingleTask = (task: TaskType) => {
