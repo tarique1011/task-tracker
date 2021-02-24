@@ -21,7 +21,8 @@ interface DispatchProps {
 type Props = TaskListScreenProps & LinkStateProps & DispatchProps
 
 interface TaskListScreenState {
-  searchText: string
+  searchText: string,
+  taskList: Array<TaskType>
 }
 class TaskListScreen extends React.Component<Props, TaskListScreenState> {
   searchableList: Array<TaskType>
@@ -29,7 +30,8 @@ class TaskListScreen extends React.Component<Props, TaskListScreenState> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      searchText: ''
+      searchText: '',
+      taskList: []
     }
     this.searchableList = []
   }
@@ -46,10 +48,12 @@ class TaskListScreen extends React.Component<Props, TaskListScreenState> {
 
   setList = () => {
     const { taskList } = this.props
-    this.searchableList = [...taskList]
+    this.setState({ taskList })
+    this.searchableList = taskList
   }
 
   openSingleTask = (task: TaskType) => {
+    this.setState({ searchText: '' })
     this.props.navigation.navigate('SingleTask', { task })
   }
 
@@ -61,12 +65,11 @@ class TaskListScreen extends React.Component<Props, TaskListScreenState> {
 
       return itemData.indexOf(searchData) > -1
     })
-    this.props.setTaskList(searchedTaskList)
+    this.setState({ taskList: searchedTaskList })
   }
 
   render () {
-    const { taskList } = this.props
-    const { searchText } = this.state
+    const { searchText, taskList } = this.state
 
     return (
       <TaskList
